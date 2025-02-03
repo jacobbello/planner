@@ -1,4 +1,9 @@
-export default function Note({text, timestamp}: {text: string, timestamp: number}) {
+export interface NoteProps {
+    text: string
+    timestamp: number
+}
+
+export default function Note({text, timestamp}: NoteProps) {
     return (
         <div>
             <p>{text}</p><br></br>
