@@ -17,18 +17,15 @@ export default function DashboardLayout({
         <html lang="en">
             <body>
                 {children}
-                <div className="px-20 py-10">
-                    <div className="columns-3">
+                <div className="container mx-auto">
+                    <div className="grid grid-cols-3 gap-4">
                         <Card>{calendar}</Card>
                         <Card>{events}</Card>
                         <Card>{todo}</Card>
                     </div>
-                    
+
                     <Card>{notes}</Card>
                 </div>
-
-
-
             </body>
         </html>
     );

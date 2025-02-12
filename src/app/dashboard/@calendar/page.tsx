@@ -1,5 +1,10 @@
-export default function Calendar() {
+import Calendar from "@/components/calendar/calendar";
+
+export default function DashboardCalendar() {
     return (
-        <div><p>Calendar</p></div>
+        <div>
+            <p>Calendar</p>
+            <Calendar></Calendar>
+        </div>
     )
 }
