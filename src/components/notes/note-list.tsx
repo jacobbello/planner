@@ -1,10 +1,9 @@
 'use client'
 import { Suspense, use, useCallback, useEffect, useState } from "react"
 import Note, { NoteProps } from "./note"
-import { createNote, getNotes, getNotesCount, StoredNote } from "@/lib/db/notes";
+import { StoredNote } from "@/lib/db/notes";
 import { handleCreateNote, handleDelete, handleUpdateNote } from "@/app/(notes)/actions";
 import PageSelector from "../ui/page-selector";
-import { get } from "http";
 
 export default function NoteList() {
     const [notes, setNotes] = useState<StoredNote[]>([]);
@@ -20,11 +19,25 @@ export default function NoteList() {
         handleUpdateNote(data).then(() => setChanged(true));
     }, []);
 
+
     useEffect(() => {
-        getNotes(1, (page.page - 1) * page.pageSize, page.pageSize)
+        async function fetchNotes() {
+            const body = {
+                page: page.page,
+                perPage: page.pageSize,
+            }
+            const res = await fetch('/api/notes', {
+                body: JSON.stringify(body)
+            });
+
+            const notes = await res.json();
+            setNotes(notes);
+        }
+        fetchNotes();
+        /*getNotes(1, (page.page - 1) * page.pageSize, page.pageSize)
             .then(setNotes).then(() => setChanged(false));
-        getNotesCount(1).then(setTotalNotes);
-    }, [page, changed]);
+        getNotesCount(1).then(setTotalNotes);*/
+    }, [page, /*changed*/]);
 
     function onCreate(data: FormData) {
         handleCreateNote(data).then(() => setChanged(true));

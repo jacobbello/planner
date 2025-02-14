@@ -8,20 +8,24 @@ export type StoredNote = InferSelectModel<typeof notes>;
 
 export async function getNotes(userId: number, offset = 0, limit = 25) {
     return db
-        .select()
+        .select({
+            text: notes.text,
+            lastModified: notes.lastModified,
+            id: notes.id
+        })
         .from(notes)
         .orderBy(desc(notes.lastModified))
         .limit(limit)
         .offset(offset);
-        //.where(eq(notes.userId, userId));
+    //.where(eq(notes.userId, userId));
 }
 
 export async function getNotesCount(userId: number) {
     return db
-        .select({count: count()})
+        .select({ count: count() })
         .from(notes)
         //.where(eq(notes.userId, userId))
-        .then(([{count}]) => count);
+        .then(([{ count }]) => count);
 }
 
 export async function getNoteById(id: number) {
@@ -35,13 +39,13 @@ export async function createNote(userId: number, text: string) {
     console.log('Saving note:', text);
     return db
         .insert(notes)
-        .values({userId: userId, text});
+        .values({ userId: userId, text });
 }
 
 export async function updateNote(id: number, text: string) {
     return db
         .update(notes)
-        .set({text, lastModified: new Date()})
+        .set({ text, lastModified: new Date() })
         .where(eq(notes.id, id));
 }
 
