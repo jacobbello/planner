@@ -1,10 +1,5 @@
-import Note from "@/components/notes/note";
-import NoteList from "@/components/notes/note-list";
+import NoteViewer from "@/components/notes/note-viewer";
 
-export default function Notes() {
-    return (
-        <>
-        <NoteList></NoteList>
-        </>
-    )
+export default async function Notes() {
+    return <NoteViewer />
 }

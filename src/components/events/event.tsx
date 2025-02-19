@@ -2,25 +2,33 @@
 
 import { useState } from "react";
 
-export default function EventListItem({title, description, date}: 
+const fmt = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric"
+  });
+
+export default function EventListItem({name, description, date}: 
     {
-        title: string,
+        name: string,
         description: string,
         date: Date
     
     }) {
     const [expanded, setExpanded] = useState(false);
-    
-    function formatDate(date: Date, military = false) {
-        return military ? `${date.getHours()}:${date.getMinutes}` : `${date.getHours() % 12}:${date.getMinutes()} ${date.getHours() > 12 ? 'PM' : 'AM'}`;
-    }
+    const past = date.getTime() < Date.now();
 
     return <>
     <div className="p-2 border border-gray-200 rounded-lg">
         <div className="grid grid-cols-3 gap-4">
-            <p className="text-gray-500">{formatDate(date)}</p>
-            <p>{title}</p>
-            <button onClick={() => setExpanded(!expanded)}>{expanded ? '\u25B2' : '\u25BC'}</button>
+            <p className="text-gray-500 text-sm">{fmt.format(date)}</p>
+            <p className={past ? "line-through" : ""}>{name}</p>
+            <button className="text-sm text-gray-400 hover:underline" onClick={() => setExpanded(!expanded)}>
+                {expanded ? "hide" : "show"}
+            </button>
         </div>
         { expanded ? <p>{description}</p> : <></>}
     </div>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import NavbarTop from "@/components/ui/navbar-top";
-import NavbarLink from "@/components/ui/navbar-link";
-import NavbarDropdown from "@/components/ui/navbar-dropdown";
+import NavbarTop from "@/components/ui/navbar/navbar";
+import NavbarDropdown from "@/components/ui/navbar/navbar-dropdown";
+import Link from "next/link";
+import NavbarLink, { NavbarLinks, verticalNavbarLinkStyles } from "@/components/ui/navbar/navbar-link";
 
 export const metadata: Metadata = {
   title: "Planner",
@@ -12,17 +12,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  auth
 }: Readonly<{
   children: React.ReactNode;
+  auth: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className="">
+      <body>
         <NavbarTop>
-          <NavbarLink href="/dashboard">Dashboard</NavbarLink>
-          <NavbarLink href="/calendar">Calendar</NavbarLink>
+          <NavbarLinks links={[
+            { name: "Home", href: "/" },
+            { name: "Dashboard", href: "/dashboard" },
+            { name: "Calendar", href: "/calendar"},
+            { name: "Todo", href: "/todo" },
+          ]} />
+          
+          <NavbarDropdown content="Account">
+            <Link className={verticalNavbarLinkStyles} href="/login">Login</Link>
+            <Link className={verticalNavbarLinkStyles} href="/signup">Signup</Link>
+          </NavbarDropdown>
         </NavbarTop>
-        {children}
+        <div>{auth}</div>
+        <div className="container mx-auto my-16">{children}</div>
       </body>
     </html>
   );

@@ -14,19 +14,15 @@ export default function DashboardLayout({
     todo: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
-                {children}
-                <div className="container mx-auto">
-                    <div className="grid grid-cols-3 gap-4">
-                        <Card>{calendar}</Card>
-                        <Card>{events}</Card>
-                        <Card>{todo}</Card>
-                    </div>
-
-                    <Card>{notes}</Card>
+        <div>
+            {children}
+            <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                    <Card>{calendar}</Card>
                 </div>
-            </body>
-        </html>
+                <Card>{todo}</Card>
+            </div>
+            <Card>{notes}</Card>
+        </div>
     );
 }

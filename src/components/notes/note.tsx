@@ -1,3 +1,4 @@
+'use client'
 import { handleUpdateNote } from "@/app/(notes)/actions";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";

@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 
 export default function Home() {
   //TODO check if logged in
-  redirect("/dashboard");
+  //redirect("/dashboard");
   return (
     <p>Test</p>
+    
   );
 }

@@ -1,7 +1,7 @@
-function PageButton({children, onClick, active = true, current = false}: {children: React.ReactNode, onClick: () => void, active?: boolean, current?: boolean}) {
+function PageButton({ children, onClick, active = true, current = false }: { children: React.ReactNode, onClick: () => void, active?: boolean, current?: boolean }) {
     if (active) {
-        return <button className="text-blue-700 hover:text-blue-500 hover:underline px-1" 
-                    onClick={onClick}>
+        return <button className="text-blue-700 hover:text-blue-500 hover:underline px-1"
+            onClick={onClick}>
             {children}
         </button>
     } else {
@@ -9,24 +9,35 @@ function PageButton({children, onClick, active = true, current = false}: {childr
     }
 }
 
-export default function PageSelector({setPage, page, max}: {page: number, max: number, setPage: (page: number) => void}) {
-    let start = Math.max(1, page - 2);
+export default function PageSelector({ setPage, page, max }: { page: number, max: number, setPage: (page: number) => void }) {
+    let start = Math.max(1, page - 2); //always include 1
     let end = Math.min(max, start + 4);
 
-    console.log(start, end);
-    Array(end-start).map((_, i) => console.log(i + start))
-
     let numbers = [];
+
+    if (start > 1) numbers.push(1);
+
     for (let i = start; i <= end; i++) {
-        numbers.push(<PageButton key={i} onClick={() => setPage(i)} current={i === page} active={i !== page}>{i}</PageButton>);
+        numbers.push(i);
     }
 
-    console.log(numbers);
+    if (end < max) numbers.push(max);
+    //TODO make length consistent 
 
     return <div>
-            <PageButton active={page>1} onClick={() => setPage(Math.max(0, page - 1))}>previous</PageButton>
-            { numbers }
-            <PageButton active={page<max} onClick={() => setPage(Math.min(max, page + 1))}>next</PageButton>
+        <PageButton active={page > 1} onClick={() => setPage(Math.max(0, page - 1))}>
+            previous
+        </PageButton>
+        {
+            numbers.map((i) => 
+                <PageButton key={i}
+                    onClick={() => setPage(i)} current={i === page} active={i !== page}>
+                {i}
+                </PageButton>)
+        }
+        <PageButton active={page < max} onClick={() => setPage(Math.min(max, page + 1))}>
+            next
+        </PageButton>
 
     </div>
 }

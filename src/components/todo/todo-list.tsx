@@ -1,26 +1,39 @@
 'use client'
-import { getNumTodos, getTodos, Todo } from "@/lib/db/todo";
 import { useEffect, useState } from "react";
 import TodoListItem from "./todo";
+import useSWR from "swr";
+import PageSelector from "../ui/page-selector";
 
-export default function TodoList() {
-    const [todos, setTodos] = useState<Todo[]>([]);
+function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
+    const { data, error, isLoading, mutate } = useSWR(
+        `/api/todo?page=${page}&perPage=${perPage}`,
+        (url) => fetch(url).then(res => res.json())
+    );
+
+    if (isLoading) return <p>Loading...</p>
+
+    if (error) {
+        return <p>error.message</p>
+    }
+
+    console.log(data);
+
+    return <ul>
+        {data.todo.map((todo: any) => (
+            <li key={todo.id}>
+                <TodoListItem {...{ ...todo, deadline: new Date(todo.deadline) }} />
+            </li>
+        ))}
+    </ul>
+}
+
+export default function TodoList({ totalTodos }: { totalTodos: number }) {
+    const perPage = 5;
     const [page, setPage] = useState(1);
-    const [totalTodos, setTotalTodos] = useState(1);
 
-    useEffect(() => {
-        getTodos(1, (page - 1) * 5, 5).then(setTodos);
-        getNumTodos(1).then(setTotalTodos);
-    }, [page])
 
     return <div>
-        <ul>
-            {todos.map((todo, index) => (
-                <li key={index}>
-                    <TodoListItem {...{ ...todo, description: todo.description ?? '' }}>
-                    </TodoListItem>
-                </li>
-            ))}
-        </ul>
+        <PageSelector page={page} max={Math.ceil(totalTodos / perPage)} setPage={setPage} />
+        <TodoListPage {...{page, perPage}}/>
     </div>
 }

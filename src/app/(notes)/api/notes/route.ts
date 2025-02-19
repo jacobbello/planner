@@ -1,10 +1,11 @@
 import { createNote, getNotes } from "@/lib/db/notes";
+import { NextRequest } from "next/server";
 
-export async function GET(request: Request) {
-    const res = await request.json();
+export async function GET(request: NextRequest) {
+    const params = request.nextUrl.searchParams;
 
-    const page = parseInt(res['page']);
-    const perPage = parseInt(res['perPage']);
+    const page = parseInt(params.get('page') as string);
+    const perPage = parseInt(params.get('perPage') as string);
 
     const notes = await getNotes(1, (page-1) * perPage, perPage);
 
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     //TODO use actual user ID
-    createNote(1, data['text']);
+    await createNote(1, data['text']);
 
     return Response.json({});
 }
