@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
+// relace the close button with an x in the top right AI!
 export default function Modal({ children }: { children: ReactNode }) {
     const router = useRouter();
     return <div className="fixed inset-0 bg-black 
