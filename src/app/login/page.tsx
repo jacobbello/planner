@@ -1,5 +1,5 @@
 import LoginForm from "@/components/auth/login-form";
-import { handleLogin } from "../actions";
+import { handleLogin } from "../(auth)/actions";
 import Link from "next/link";
 
 export default function Page() {

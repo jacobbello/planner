@@ -1,9 +1,16 @@
+'use client'
 import SubmitButton from "../ui/form/submit-button";
 import TextInput from "../ui/form/text-input";
 import { handleLogin } from "@/app/(auth)/actions";
-import SmallLink from "../ui/small-link";
+import SmallLink, { smallLinkStyles } from "../ui/small-link";
+import Link from "next/link";
 
-export default function LoginForm() {
+export default function LoginForm({modal}: {modal?: boolean}) {
+    const linkProps = {
+        children: "Don't have an account? Sign up",
+        href: "/signup",
+        className: smallLinkStyles,
+    }
 
     return <form className="" action={handleLogin}>
         <div>
@@ -12,7 +19,9 @@ export default function LoginForm() {
         <div>
             <TextInput type="password" name="password" placeholder="Password" />
         </div>
-        <SmallLink href="/signup">Don't have an account? Sign up</SmallLink>
+        {   // Prevent modal from staying open when leaving
+            modal ? <a {...linkProps} />: <Link {...linkProps} />
+        }
         <div className="float-right w-full"><SubmitButton>Login</SubmitButton></div>
     </form>
 }

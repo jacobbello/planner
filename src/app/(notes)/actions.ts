@@ -1,6 +1,7 @@
 'use server'
 
 import { createNote, deleteNote, updateNote } from "@/lib/db/notes";
+import { zfd } from "zod-form-data"
 
 export async function handleCreateNote(formData: FormData) {
     await createNote(1, formData.get("text") as string);
