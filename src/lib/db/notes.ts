@@ -1,6 +1,6 @@
 'use server'
 
-import { eq, desc, InferSelectModel, count } from "drizzle-orm";
+import { eq, desc, InferSelectModel, count, and } from "drizzle-orm";
 import { notes } from "./schema";
 import { db } from "./drizzle";
 
@@ -16,15 +16,15 @@ export async function getNotes(userId: number, offset = 0, limit = 25) {
         .from(notes)
         .orderBy(desc(notes.lastModified))
         .limit(limit)
-        .offset(offset);
-    //.where(eq(notes.userId, userId));
+        .offset(offset)
+        .where(eq(notes.userId, userId));
 }
 
 export async function getNotesCount(userId: number) {
     return db
         .select({ count: count() })
         .from(notes)
-        //.where(eq(notes.userId, userId))
+        .where(eq(notes.userId, userId))
         .then(([{ count }]) => count);
 }
 
@@ -42,15 +42,15 @@ export async function createNote(userId: number, text: string) {
         .values({ userId: userId, text });
 }
 
-export async function updateNote(id: number, text: string) {
+export async function updateNote(id: number, text: string, userId?: number) {
     return db
         .update(notes)
         .set({ text, lastModified: new Date() })
-        .where(eq(notes.id, id));
+        .where(and(eq(notes.id, id), userId ? eq(notes.userId, userId) : undefined));
 }
 
-export async function deleteNote(id: number) {
+export async function deleteNote(id: number, userId?: number) {
     return db
         .delete(notes)
-        .where(eq(notes.id, id));
+        .where(and(eq(notes.id, id), userId ? eq(notes.userId, userId) : undefined));
 }

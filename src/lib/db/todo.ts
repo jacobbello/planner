@@ -19,7 +19,7 @@ export async function getTodos(userId: number, excludeDone = false, offset = 0, 
         ));
 }
 
-export async function getTodoCount(userId: number, excludeDone=false) {
+export async function getTodoCount(userId: number, excludeDone = false) {
     return db.select({ count: count() })
         .from(todo)
         .where(and(
@@ -34,15 +34,21 @@ export async function createTodo(userId: number, name: string, description: stri
         .values({ userId, name, description, deadline });
 }
 
-export async function updateTodo(id: number, name: string, description: string, deadline: Date) {
+export async function updateTodo(
+    id: number,
+    name: string, 
+    description: string, 
+    deadline: Date,
+    userId?: number
+) {
     return db
         .update(todo)
         .set({ name, description, deadline })
-        .where(eq(todo.id, id));
+        .where(and(eq(todo.id, id), userId ? eq(todo.userId, userId) : undefined));
 }
 
-export async function deleteTodo(id: number) {
+export async function deleteTodo(id: number, userId?: number) {
     return db
         .delete(todo)
-        .where(eq(todo.id, id));
+        .where(and(eq(todo.id, id), userId ? eq(todo.userId, userId) : undefined));
 }

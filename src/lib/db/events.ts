@@ -63,14 +63,16 @@ export async function createEvent(userId: number, name: string, description: str
         .values({ userId, name, description, date });
 }
 
-export async function updateEvent(id: number, name: string, description: string, date: Date) {
+export async function updateEvent(
+    id: number, name: string, description: string, date: Date, userId?: number
+) {
     return db.update(events)
-        .set({name, description, date})
-        .where(eq(events.id, id));
+        .set({ name, description, date })
+        .where(and(eq(events.id, id), userId ? eq(events.userId, userId) : undefined));
 }
 
-export async function deleteEvent(id: number) {
+export async function deleteEvent(id: number, userId?: number) {
     return db
         .delete(events)
-        .where(eq(events.id, id));
+        .where(and(eq(events.id, id), userId ? eq(events.userId, userId) : undefined));
 }

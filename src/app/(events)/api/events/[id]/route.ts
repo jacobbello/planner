@@ -2,12 +2,6 @@ import { deleteEvent, updateEvent } from "@/lib/db/events";
 
 type RouteParams = {params: Promise<{id: string}>};
 
-
-/*export async function GET(request: Request,
-    {params}: RouteParams) {
-    const id = (await params).id;
-}*/
-
 export async function PUT(request: Request,
     {params}: RouteParams
 ) {

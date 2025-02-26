@@ -2,7 +2,7 @@ import { boolean, integer, pgTable, text, timestamp, uuid, varchar } from "drizz
 
 export const users = pgTable("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    email: varchar({length: 320}).notNull(),
+    email: varchar({length: 320}).notNull().unique(),
     password: varchar({length: 64}).notNull()
 });
 

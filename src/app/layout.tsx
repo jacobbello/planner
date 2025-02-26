@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavbarTop from "@/components/ui/navbar/navbar";
+import Navbar from "@/components/ui/navbar/navbar";
 import NavbarDropdown from "@/components/ui/navbar/navbar-dropdown";
 import Link from "next/link";
 import NavbarLink, { NavbarLinks, verticalNavbarLinkStyles } from "@/components/ui/navbar/navbar-link";
+import UserDropdown from "@/components/ui/user-dropdown";
 
 export const metadata: Metadata = {
   title: "Planner",
@@ -17,10 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
   auth: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body>
-        <NavbarTop>
+        <Navbar>
           <NavbarLinks links={[
             { name: "Home", href: "/" },
             { name: "Dashboard", href: "/dashboard" },
@@ -28,11 +30,8 @@ export default function RootLayout({
             { name: "Todo", href: "/todo" },
           ]} />
           
-          <NavbarDropdown content="Account">
-            <Link className={verticalNavbarLinkStyles} href="/login">Login</Link>
-            <Link className={verticalNavbarLinkStyles} href="/signup">Signup</Link>
-          </NavbarDropdown>
-        </NavbarTop>
+          <UserDropdown />
+        </Navbar>
         <div>{auth}</div>
         <div className="container mx-auto my-16">{children}</div>
       </body>

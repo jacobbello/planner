@@ -16,8 +16,6 @@ function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
         return <p>error.message</p>
     }
 
-    console.log(data);
-
     return <ul>
         {data.todo.map((todo: any) => (
             <li key={todo.id}>

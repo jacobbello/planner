@@ -3,6 +3,7 @@
 import { eq, InferSelectModel } from "drizzle-orm";
 import { db } from "./drizzle";
 import { users } from "./schema";
+import bcrypt from "bcryptjs"
 
 export type User = InferSelectModel<typeof users>;
 
@@ -10,11 +11,23 @@ export async function getUser(email: string) {
     return db
         .select()
         .from(users)
-        .where(eq(users.email, email));
+        .where(eq(users.email, email))
+        .then(rows => {
+            if (rows.length != 1) throw new Error("User not found with email " + email);
+            return rows[0];
+        });
+}
+
+export async function login(email: string, password: string) {
+    const user = await getUser(email);
+    const res = await bcrypt.compare(password, user.password);
+    return res ? {id: user.id} : null;
 }
 
 export async function createUser(email: string, password: string) {
+    const hashed = await bcrypt.hash(password, 10);
+
     return db
         .insert(users)
-        .values({email, password})
+        .values({ email, password: hashed })
 }

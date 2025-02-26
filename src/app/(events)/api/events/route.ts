@@ -1,54 +1,98 @@
+import { auth } from "@/auth";
 import { createEvent, getCountInRange, getEventsInRange, StoredEvent } from "@/lib/db/events";
-import { NextRequest } from "next/server";
+import { z } from "zod";
 
-export async function GET(request: NextRequest) {
+const getEventsSchema = z.object({
+    page: z.number().int().positive(),
+    perPage: z.number().int().positive(),
+    start: z.string().datetime().optional(),
+    end: z.string().datetime().optional()
+})
+
+export const GET = auth(async (request) => {
+    if (!request.auth) {
+        return Response.json({ message: "Authentication failure" }, { status: 401 });
+    }
+    console.log("Auth" + request.auth);
     const userId = 1;
     const params = request.nextUrl.searchParams;
+
+    const res = await getEventsSchema.safeParseAsync({
+        page: params.get("page"),
+        perPage: params.get("perPage"),
+        start: params.get("start"),
+        end: params.get("end")
+    });
+
+    if (!res.success) {
+        return Response.json({
+            errors: res.error.flatten().fieldErrors,
+            events: [],
+            total: 0
+        }, {status: 400})
+    }
 
     let events: StoredEvent[] = [];
 
-    let page = parseInt(params.get('page') as string);
-    let perPage = parseInt(params.get('perPage') as string);
+    let start = new Date(res.data.start||0);
+    let end = new Date(res.data.end || (Date.now() * 2));
 
-    let start = new Date(0);
-    if (params.has('start')) {
-        let start = new Date(parseInt(params.get('start') as string));
+    events = await getEventsInRange(
+        userId, { start, end },
+        (res.data.page - 1) * res.data.perPage + 1,
+        res.data.perPage
+    );
+    let total = await getCountInRange(userId, { start, end });
+
+    return Response.json({ events, total });
+})
+
+
+const countEventsSchema = z.object({
+    start: z.date().optional(),
+    end: z.date().optional()
+});
+
+export const HEAD = auth(async (request) => {
+    if (!request.auth) {
+        return Response.json({ message: "Authentication failure" }, { status: 401 });
     }
-
-    let end = new Date(Date.now() * 2);
-    if (params.has('end')) {
-        end = new Date(parseInt(params.get('end') as string));
-    }
-    events = await getEventsInRange(userId, {start, end}, (page-1) * perPage + 1, perPage);
-    let total = await getCountInRange(userId, {start, end});
-
-    return Response.json({events, total});
-}
-
-export async function HEAD(request: NextRequest) {
     const userId = 1;
     const params = request.nextUrl.searchParams;
 
-    let page = parseInt(params.get('page') as string);
-    let perPage = parseInt(params.get('perPage') as string);
+    const res = await countEventsSchema.safeParseAsync({
+        page: params.get("page"),
+        perPage: params.get("perPage")
+    });
 
-    let start = new Date(0);
-    if (params.has('start')) {
-        let start = new Date(parseInt(params.get('start') as string));
+    if (!res.success) {
+        return Response.json(res.error.flatten().fieldErrors, {status: 400});
     }
 
-    let end = new Date(Date.now() * 2);
-    if (params.has('end')) {
-        end = new Date(parseInt(params.get('end') as string));
-    }
-    return Response.json(await getCountInRange(userId, {start, end}));
-}
+    let start = res.data.start || new Date(0);
+    let end = res.data.end || new Date(Date.now() * 2);
+    return Response.json(await getCountInRange(userId, { start, end }));
+});
 
-export async function POST(request: NextRequest) {
+
+const createEventsSchema = z.object({
+    name: z.string().nonempty(),
+    desc: z.string().nonempty(),
+    date: z.date()
+});
+export const POST = auth(async (request) => {
+    if (!request.auth) {
+        return Response.json({ message: "Authentication failure" }, { status: 401 });
+    }
     const userId = 1;
-    const data = await request.json();
+    const body = await request.json();
+    const res = await createEventsSchema.safeParseAsync(body);
 
-    await createEvent(userId, data['name'], data['desc'], data['date']);
+    if (!res.success) {
+        return Response.json(res.error.flatten().fieldErrors, {status: 400});
+    }
+
+    await createEvent(userId, res.data.name, res.data.desc, res.data.date);
 
     return Response.json({});
-}
+});
