@@ -7,7 +7,7 @@ import { zfd } from "zod-form-data"
 
 export async function handleCreateNote(formData: FormData) {
     const session = await auth();
-    if (!session?.user) {
+    if (!session?.user?.id) {
         return {
             errors: {
                 auth: "Not logged in"
@@ -15,7 +15,7 @@ export async function handleCreateNote(formData: FormData) {
         }
     }
 
-    const userId = session.user.id;
+    const userId = parseInt(session.user.id);
     const res = zfd.formData(createNoteSchema).safeParse(formData);
 
     if (!res.success) {
@@ -38,5 +38,6 @@ export async function handleUpdateNote(formData: FormData) {
 }
 
 export async function handleDelete(id: number) {
+    // Check if logged in, pass userId to deleteNote, AI!
     await deleteNote(id);
 }
