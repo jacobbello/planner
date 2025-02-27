@@ -38,6 +38,15 @@ export async function handleUpdateNote(formData: FormData) {
 }
 
 export async function handleDelete(id: number) {
-    // Check if logged in, pass userId to deleteNote, AI!
-    await deleteNote(id);
+    const session = await auth();
+    if (!session?.user?.id) {
+        return {
+            errors: {
+                auth: "Not logged in"
+            }
+        }
+    }
+
+    const userId = parseInt(session.user.id);
+    await deleteNote(id, userId);
 }
