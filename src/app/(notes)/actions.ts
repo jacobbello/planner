@@ -28,14 +28,24 @@ export async function handleCreateNote(formData: FormData) {
 }
 
 export async function handleUpdateNote(formData: FormData) {
-    // Add auth check here AI!
+    const session = await auth();
+    if (!session?.user?.id) {
+        return {
+            errors: {
+                auth: "Not logged in"
+            }
+        }
+    }
+
+    const userId = parseInt(session.user.id);
+
     const res = zfd.formData(updateNoteSchema).safeParse(formData);
     if (!res.success) {
         return {
             errors: res.error.flatten().fieldErrors
         }
     }
-    await updateNote(res.data.id, res.data.text);
+    await updateNote(res.data.id, res.data.text, userId);
 }
 
 export async function handleDelete(id: number) {
