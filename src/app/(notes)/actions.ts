@@ -28,6 +28,7 @@ export async function handleCreateNote(formData: FormData) {
 }
 
 export async function handleUpdateNote(formData: FormData) {
+    // Add auth check here AI!
     const res = zfd.formData(updateNoteSchema).safeParse(formData);
     if (!res.success) {
         return {
