@@ -7,8 +7,6 @@ export default async function NoteViewer() {
     const totalNotes = await getNotesCount(userId);
 
     return (
-        <>
-        <NoteList totalNotes={totalNotes}></NoteList>
-        </>
+        <NoteList notesCount={totalNotes} />
     )
 }

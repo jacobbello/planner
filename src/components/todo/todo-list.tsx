@@ -25,13 +25,13 @@ function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
     </ul>
 }
 
-export default function TodoList({ totalTodos }: { totalTodos: number }) {
+export default function TodoList({ todosCount }: { todosCount: number }) {
     const perPage = 5;
     const [page, setPage] = useState(1);
 
 
     return <div>
-        <PageSelector page={page} max={Math.ceil(totalTodos / perPage)} setPage={setPage} />
+        <PageSelector page={page} max={Math.ceil(todosCount / perPage)} setPage={setPage} />
         <TodoListPage {...{page, perPage}}/>
     </div>
 }

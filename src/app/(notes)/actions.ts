@@ -27,13 +27,20 @@ export async function handleCreateNote(formData: FormData) {
     return {}
 }
 
-export async function handleUpdateNote(formData: FormData) {
+export interface UpdateNoteActionState {
+    fieldErrors?: any,
+    message?: string,
+    text: string,
+    success?: boolean
+}
+export async function handleUpdateNote(prev: UpdateNoteActionState, formData: FormData):
+    Promise<UpdateNoteActionState> {
     const session = await auth();
     if (!session?.user?.id) {
         return {
-            errors: {
-                auth: "Not logged in"
-            }
+            ...prev,
+            success: false,
+            message: "Not logged in"
         }
     }
 
@@ -42,16 +49,36 @@ export async function handleUpdateNote(formData: FormData) {
     const res = zfd.formData(updateNoteSchema).safeParse(formData);
     if (!res.success) {
         return {
-            errors: res.error.flatten().fieldErrors
+            ...prev,
+            fieldErrors: res.error.flatten().fieldErrors,
+            success: false
         }
     }
-    await updateNote(res.data.id, res.data.text, userId);
+    try {
+        await updateNote(res.data.id, res.data.text, userId);
+    } catch (e: any) {
+        return {
+            ...prev,
+            text: res.data.text,
+            success: false,
+            message: e.message
+        }
+    }
+    return { ...prev, text: res.data.text, success: true };
 }
 
-export async function handleDelete(id: number) {
+export interface DeleteNoteActionState {
+    success?: boolean,
+    errors?: {
+        auth?: string,
+        delete?: string
+    }
+}
+export async function handleDelete(id: number, prev: DeleteNoteActionState) {
     const session = await auth();
     if (!session?.user?.id) {
         return {
+            success: false,
             errors: {
                 auth: "Not logged in"
             }
@@ -59,5 +86,17 @@ export async function handleDelete(id: number) {
     }
 
     const userId = parseInt(session.user.id);
-    await deleteNote(id, userId);
+    try {
+        await deleteNote(id, userId);
+    } catch (e: any) {
+        return {
+            success: false,
+            errors: {
+                delete: e.message
+            }
+        }
+    }
+    return {
+        success: true
+    };
 }

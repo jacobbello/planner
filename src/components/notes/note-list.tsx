@@ -60,13 +60,13 @@ function NoteListPage({ page, perPage }: PageInfo) {
     return content;
 }
 
-export default function NoteList({ totalNotes }: { totalNotes: number }) {
+export default function NoteList({ notesCount }: { notesCount: number }) {
     const [page, setPage] = useState({ page: 1, perPage: 10 });
 
     const start = Math.max(1, (page.page - 1) * page.perPage + 1);
-    const end = Math.min((page.page * page.perPage) + 1, totalNotes);
+    const end = Math.min((page.page * page.perPage) + 1, notesCount);
 
-    const maxPage = Math.ceil(totalNotes / page.perPage);
+    const maxPage = Math.ceil(notesCount / page.perPage);
 
     const { mutate } = useSWRConfig();
     return (
@@ -81,7 +81,7 @@ export default function NoteList({ totalNotes }: { totalNotes: number }) {
             }} />
             <div className="flex justify-between mx-2 my-1">
                 <div>
-                    <span>Showing {start} to {end} of {totalNotes} notes </span>
+                    <span>Showing {start} to {end} of {notesCount} notes </span>
                 </div>
                 <div>
                     <PageDropdown {...{ page, setPage }} />

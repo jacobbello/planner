@@ -13,20 +13,13 @@ export default function SignupForm() {
 
 
     return <form action={formAction}>
-        {
-            (!!state.errors?.email) ? <FormError>{state.errors.email}</FormError> : null
-        }
+        <FormError text={state.errors?.email}/>
         <TextInput name="email" type="email" placeholder="Enter your email address" />
-        {
-            (!!state.errors?.password) ? <FormError>{state.errors.password}</FormError> : null
-        }
+        <FormError text={state.errors?.password}/>
         <TextInput name="password" type="password" placeholder="Enter a password" value={password.first}
             onChange={e => setPassword({ first: e.target.value, second: password.second })}
         />
-        {
-            matching ? null :
-            <FormError>Passwords must match</FormError>
-        }
+        <FormError text={matching ? "" : "Passwords must match"}/>
         <TextInput name="passwordMatch" type="password" placeholder="Re-enter your password" value={password.second}
             onChange={e => setPassword({ first: password.first, second: e.target.value })}
         />
