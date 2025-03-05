@@ -10,10 +10,10 @@ function PageButton({ children, onClick, active = true, current = false }: { chi
 }
 
 export default function PageSelector({ setPage, page, max }: { page: number, max: number, setPage: (page: number) => void }) {
-    let start = Math.max(1, page - 2); //always include 1
-    let end = Math.min(max, start + 4);
+    const start = Math.max(1, page - 2); //always include 1
+    const end = Math.min(max, start + 4);
 
-    let numbers = [];
+    const numbers = [];
 
     if (start > 1) numbers.push(1);
 

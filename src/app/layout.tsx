@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/ui/navbar/navbar";
-import NavbarDropdown from "@/components/ui/navbar/navbar-dropdown";
+import Navbar from "@/components/ui/navbar/Navbar";
+import NavbarDropdown from "@/components/ui/navbar/NavbarDropdown";
 import Link from "next/link";
-import NavbarLink, { NavbarLinks, verticalNavbarLinkStyles } from "@/components/ui/navbar/navbar-link";
-import UserDropdown from "@/components/ui/user-dropdown";
+import NavbarLink, { NavbarLinks, verticalNavbarLinkStyles } from "@/components/ui/navbar/NavbarLink";
+import UserDropdown from "@/components/ui/UserDropdown";
 
 export const metadata: Metadata = {
   title: "Planner",
@@ -12,11 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-  auth
+  children
 }: Readonly<{
   children: React.ReactNode;
-  auth: React.ReactNode;
 }>) {
 
   return (
@@ -32,7 +30,6 @@ export default function RootLayout({
           
           <UserDropdown />
         </Navbar>
-        <div>{auth}</div>
         <div className="container mx-auto my-16">{children}</div>
       </body>
     </html>

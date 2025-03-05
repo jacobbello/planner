@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { createEvent, getCountInRange, getEventsInRange, StoredEvent } from "@/lib/db/events";
+import protectedRouteHandler from "@/lib/util/json-api";
 import { z } from "zod";
 
 const getEventsSchema = z.object({
@@ -9,12 +10,7 @@ const getEventsSchema = z.object({
     end: z.string().datetime().optional()
 })
 
-export const GET = auth(async (request) => {
-    if (!request.auth) {
-        return Response.json({ message: "Authentication failure" }, { status: 401 });
-    }
-    console.log("Auth" + request.auth);
-    const userId = 1;
+export const GET = protectedRouteHandler(async (userId, request) => {
     const params = request.nextUrl.searchParams;
 
     const res = await getEventsSchema.safeParseAsync({
@@ -53,11 +49,7 @@ const countEventsSchema = z.object({
     end: z.date().optional()
 });
 
-export const HEAD = auth(async (request) => {
-    if (!request.auth) {
-        return Response.json({ message: "Authentication failure" }, { status: 401 });
-    }
-    const userId = 1;
+export const HEAD = protectedRouteHandler(async (userId, request) => {
     const params = request.nextUrl.searchParams;
 
     const res = await countEventsSchema.safeParseAsync({
@@ -80,11 +72,7 @@ const createEventsSchema = z.object({
     desc: z.string().nonempty(),
     date: z.date()
 });
-export const POST = auth(async (request) => {
-    if (!request.auth) {
-        return Response.json({ message: "Authentication failure" }, { status: 401 });
-    }
-    const userId = 1;
+export const POST = protectedRouteHandler(async (userId, request) => {
     const body = await request.json();
     const res = await createEventsSchema.safeParseAsync(body);
 

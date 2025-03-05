@@ -4,6 +4,7 @@ import { eq, InferSelectModel } from "drizzle-orm";
 import { db } from "./drizzle";
 import { users } from "./schema";
 import bcrypt from "bcryptjs"
+import UserNotFoundError from "../util/error/user_not_found";
 
 export type User = InferSelectModel<typeof users>;
 
@@ -13,7 +14,7 @@ export async function getUser(email: string) {
         .from(users)
         .where(eq(users.email, email))
         .then(rows => {
-            if (rows.length != 1) throw new Error("User not found with email " + email);
+            if (rows.length != 1) throw new UserNotFoundError(email);
             return rows[0];
         });
 }

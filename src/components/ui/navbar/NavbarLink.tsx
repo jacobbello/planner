@@ -1,4 +1,4 @@
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
 import { AnchorHTMLAttributes } from "react";
 
 export const navbarLinkStyles = "cursor-pointer text-white bg-gray-800 hover:bg-gray-700 px-2 py-3";
@@ -18,7 +18,7 @@ export function NavbarLinks({ links }: { links: { name: string, href: string }[]
 }
 
 export default function NavbarLink(props: AnchorHTMLAttributes<HTMLAnchorElement>
-    & { inline?: any }) {
+    & { inline?: boolean }) {
     return <a className={
         props.inline ? inlineNavbarLinkStyles : verticalNavbarLinkStyles} {...props}
     />

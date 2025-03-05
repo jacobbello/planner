@@ -6,7 +6,7 @@ import { db } from "./drizzle";
 
 export type StoredNote = InferSelectModel<typeof notes>;
 
-export async function getNotes(userId: number, offset = 0, limit = 25) {
+export async function getNotes(userId: string, offset = 0, limit = 25) {
     return db
         .select({
             text: notes.text,
@@ -20,7 +20,7 @@ export async function getNotes(userId: number, offset = 0, limit = 25) {
         .where(eq(notes.userId, userId));
 }
 
-export async function getNotesCount(userId: number) {
+export async function getNotesCount(userId: string) {
     return db
         .select({ count: count() })
         .from(notes)
@@ -35,21 +35,21 @@ export async function getNoteById(id: number) {
         .where(eq(notes.id, id));
 }
 
-export async function createNote(userId: number, text: string) {
+export async function createNote(userId: string, text: string) {
     console.log('Saving note:', text);
     return db
         .insert(notes)
-        .values({ userId: userId, text });
+        .values({ userId, text });
 }
 
-export async function updateNote(id: number, text: string, userId?: number) {
+export async function updateNote(id: number, text: string, userId?: string) {
     return db
         .update(notes)
         .set({ text, lastModified: new Date() })
         .where(and(eq(notes.id, id), userId ? eq(notes.userId, userId) : undefined));
 }
 
-export async function deleteNote(id: number, userId?: number) {
+export async function deleteNote(id: number, userId?: string) {
     return db
         .delete(notes)
         .where(and(eq(notes.id, id), userId ? eq(notes.userId, userId) : undefined));

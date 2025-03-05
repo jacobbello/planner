@@ -1,5 +1,4 @@
-import NoteViewer from "@/components/notes/note-viewer";
-
+import NoteList from "@/components/notes/NoteList";
 export default async function Notes() {
-    return <NoteViewer />
+    return <NoteList />
 }

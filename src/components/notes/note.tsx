@@ -3,7 +3,7 @@ import { handleDelete } from "@/app/(notes)/actions";
 import { handleUpdateNote } from "@/app/(notes)/actions";
 import { useActionState, useState } from "react";
 import { useSWRConfig } from "swr";
-import FormError from "@/components/ui/form/form-error";
+import FormError from "@/components/ui/form/FormError";
 
 function NoteEditor({ text, id, setEditing }: {
     text: string, id: number,
@@ -26,7 +26,7 @@ function NoteEditor({ text, id, setEditing }: {
 
     return (<>
         <FormError text={state.fieldErrors?.text}/>
-        <FormError text={}
+        <FormError text={state.message} />
         <form action={updateAction} className="">
             <textarea className="inline-block size-full" name="text" placeholder="Add a note" defaultValue={state.text} />
             <input type="hidden" name="id" value={id} />

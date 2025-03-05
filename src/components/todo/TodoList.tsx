@@ -1,11 +1,11 @@
 'use client'
-import { useEffect, useState } from "react";
-import TodoListItem from "./todo";
+import { useState } from "react";
+import TodoListItem from "./Todo";
 import useSWR from "swr";
-import PageSelector from "../ui/page-selector";
+import PageSelector from "../ui/PageSelector";
 
 function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
-    const { data, error, isLoading, mutate } = useSWR(
+    const { data, error, isLoading } = useSWR(
         `/api/todo?page=${page}&perPage=${perPage}`,
         (url) => fetch(url).then(res => res.json())
     );
@@ -17,7 +17,7 @@ function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
     }
 
     return <ul>
-        {data.todo.map((todo: any) => (
+        {data?.todo?.map((todo: any) => (
             <li key={todo.id}>
                 <TodoListItem {...{ ...todo, deadline: new Date(todo.deadline) }} />
             </li>

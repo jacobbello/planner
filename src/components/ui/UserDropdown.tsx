@@ -1,11 +1,11 @@
 import Link from "next/link";
-import NavbarDropdown from "./navbar/navbar-dropdown";
-import { inlineNavbarLinkStyles, verticalNavbarLinkStyles } from "./navbar/navbar-link";
+import NavbarDropdown from "./navbar/NavbarDropdown";
+import { inlineNavbarLinkStyles, verticalNavbarLinkStyles } from "./navbar/NavbarLink";
 import { auth, signIn, signOut } from "@/auth";
 
 export default async function UserDropdown() {
     const session = await auth();
-    if (!session) {
+    if (!session?.user?.id) {
         return <div className="inline float-right">
             <form action={async () => {
                 "use server"
@@ -16,7 +16,7 @@ export default async function UserDropdown() {
         </div>
     }
 
-    return <NavbarDropdown content="Settings">
+    return <NavbarDropdown content={session.user.id}>
         <Link className={verticalNavbarLinkStyles} href="/signup">Account</Link>
         <form action={async () => {
                 "use server"

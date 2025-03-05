@@ -1,12 +1,10 @@
-import { dateFormat } from "@/lib/util/dateformat";
+import { dateFormat } from "@/lib/util/dateutils";
 import { useState } from "react";
 
 export default function TodoListItem({ done, deadline, description, name }:
     {
         done: boolean, deadline: Date, description?: string, name: string
     }) {
-    const [expanded, setExpanded] = useState(!done);
-
 
     return (
         <div className="p-2 border border-gray-200 rounded-lg">

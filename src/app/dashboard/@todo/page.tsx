@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import TodoList from "@/components/todo/todo-list";
+import TodoList from "@/components/todo/TodoList";
 import { getNotesCount } from "@/lib/db/notes";
 
 export default async function Todo() {

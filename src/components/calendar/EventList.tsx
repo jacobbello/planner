@@ -2,10 +2,10 @@
 import { getCountInRange, getEventsInRange } from "@/lib/db/events";
 import { useEffect, useState } from "react";
 import { StoredEvent } from "@/lib/db/events";
-import EventListItem from "./event";
-import PageSelector from "../ui/page-selector";
+import EventListItem from "./Event";
+import PageSelector from "../ui/PageSelector";
 import useSWR from "swr";
-import { dateFormat } from "@/lib/util/dateformat";
+import { dateFormat } from "@/lib/util/dateutils";
 
 const fetcher = (url: string | URL | Request, init: RequestInit | undefined) =>
     fetch(url, init).then(res => res.json());
@@ -14,10 +14,10 @@ export default function EventList(range: { start: Date, end: Date }) {
     const [page, setPage] = useState(1);
 
 
-    const start = range.start !== undefined ? `&start=${range}` : '';
-    const end = range.end !== undefined ? `&end=${range}` : '';
+    const start = range.start !== undefined ? `&start=${range.start.toJSON()}` : '';
+    const end = range.end !== undefined ? `&end=${range.end.toJSON()}` : '';
     const key = `/api/events?page=${page}&perPage=5` + start + end;
-    const { data, error, isLoading, mutate } = useSWR(
+    const { data, error, isLoading } = useSWR(
         key,
         fetcher
     );

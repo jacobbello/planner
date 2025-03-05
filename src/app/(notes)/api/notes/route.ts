@@ -1,22 +1,42 @@
-import { createNote, getNotes } from "@/lib/db/notes";
-import { NextRequest } from "next/server";
+import { auth } from "@/auth";
+import { createNote, getNotes, getNotesCount } from "@/lib/db/notes";
+import protectedRouteHandler from "@/lib/util/json-api";
 
-export async function GET(request: NextRequest) {
-    const params = request.nextUrl.searchParams;
+export const GET = protectedRouteHandler(async (userId, req) => {
+    const params = req.nextUrl.searchParams;
 
-    const page = parseInt(params.get('page') as string);
-    const perPage = parseInt(params.get('perPage') as string);
+    const page = parseInt(params.get("page") as string);
+    const perPage = parseInt(params.get("perPage") as string);
 
-    const notes = await getNotes(1, (page-1) * perPage, perPage);
+    try {
+        const notes = await getNotes(userId, (page - 1) * perPage, perPage);
+        const count = await getNotesCount(userId);
 
-    return Response.json(notes);
-}
+        return Response.json({ notes, count, success: true });
+    } catch (e: any) {
+        return Response.json({ success: false, message: e.message });
+    }
+});
 
-export async function POST(request: Request) {
-    const data = await request.json();
+export const HEAD = protectedRouteHandler(async (userId, req) => {
+    try {
+        const count = await getNotesCount(userId);
+        return Response.json({count, success: true})
+    } catch (e: any) {
+        return Response.json({success: false, message: e.message});
+    }
+});
 
-    //TODO use actual user ID
-    await createNote(1, data['text']);
+export const POST = protectedRouteHandler(async (userId, req) => {
+    const data = await req.json();
 
-    return Response.json({});
-}
+    if (typeof data["text"] !== "string" || data["text"].length == 0)
+        return Response.json({success: false, message: "Body cannot be empty"})
+
+    try {
+        await createNote(userId, data['text']);
+        return Response.json({ success: true });
+    } catch (e: any) {
+        return Response.json({ success: false, message: e.message })
+    }
+});

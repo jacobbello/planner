@@ -1,6 +1,6 @@
 'use client'
-import Calendar from "@/components/calendar/calendar";
-import EventList from "@/components/events/event-list";
+import Calendar from "@/components/calendar/Calendar";
+import EventList from "@/components/calendar/EventList";
 import { useState } from "react";
 
 export default function DashboardCalendar() {

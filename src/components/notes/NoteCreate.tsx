@@ -1,4 +1,4 @@
-import SubmitButton from "../ui/form/submit-button";
+import SubmitButton from "../ui/form/SubmitButton";
 
 export default function NoteCreate({action}: {action: (d: FormData) => void}) {
     return <form action={action} className="">

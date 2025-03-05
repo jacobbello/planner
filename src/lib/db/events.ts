@@ -6,7 +6,7 @@ import { events } from "./schema";
 
 export type StoredEvent = InferSelectModel<typeof events>;
 
-export async function getEvents(userId: number) {
+export async function getEvents(userId: string) {
     return db
         .select()
         .from(events)
@@ -19,7 +19,7 @@ export async function getEventsInRange(
     offset = 0,
     limit = 5
 ) {
-    let conditions: SQL[] = [eq(events.userId, userId)];
+    const conditions: SQL[] = [eq(events.userId, userId)];
 
     if (range.end !== undefined)
         conditions.push(lt(events.date, range.end));

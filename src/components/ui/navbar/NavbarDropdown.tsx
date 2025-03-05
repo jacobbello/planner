@@ -1,6 +1,6 @@
-'use client'
-import { ReactNode, useState } from "react";
-import NavbarLink from "./navbar-link";
+"use client"
+import { ReactNode } from "react";
+import NavbarLink from "./NavbarLink";
 
 export default function NavbarDropdown({ content, children }:
     { content: ReactNode, children: ReactNode }) {

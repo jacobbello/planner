@@ -1,4 +1,4 @@
-import NoteViewer from "@/components/notes/note-viewer";
+import NoteViewer from "@/components/notes/NoteViewer";
 
 export default function NotesPage() {
     return <>

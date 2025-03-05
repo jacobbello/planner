@@ -3,7 +3,7 @@ import * as schema from './schema'
 import {seed} from 'drizzle-seed'
 
 async function main() {
-    await seed(db, schema).refine((f) => ({
+    await seed(db, schema).refine(() => ({
         users: {
             count: 5,
             with: {
