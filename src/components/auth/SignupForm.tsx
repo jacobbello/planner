@@ -24,6 +24,6 @@ export default function SignupForm() {
             onChange={e => setPassword({ first: password.first, second: e.target.value })}
         />
         <SmallLink href="/login">Already have an account? Sign In</SmallLink>
-        <SubmitButton>Register</SubmitButton>
+        <SubmitButton disabled={pending}>Register</SubmitButton>
     </form>
 }

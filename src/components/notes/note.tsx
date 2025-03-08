@@ -4,12 +4,13 @@ import { handleUpdateNote } from "@/app/(notes)/actions";
 import { useActionState, useState } from "react";
 import { useSWRConfig } from "swr";
 import FormError from "@/components/ui/form/FormError";
+import { dateTimeFormat } from "@/lib/util/dateutils";
 
 function NoteEditor({ text, id, setEditing }: {
     text: string, id: number,
     setEditing: (editing: boolean) => void
 }) {
-    const {mutate} = useSWRConfig();
+    const { mutate } = useSWRConfig();
 
     const [state, updateAction, pending] = useActionState(async (prev: any, data: FormData) => {
         let res = await handleUpdateNote(prev, data);
@@ -18,14 +19,14 @@ function NoteEditor({ text, id, setEditing }: {
             mutate(
                 key => typeof key === "string" && key.startsWith("/api/notes"),
                 undefined,
-                {revalidate: true}
+                { revalidate: true }
             );
         }
         return res;
     }, { text, success: false });
 
     return (<>
-        <FormError text={state.fieldErrors?.text}/>
+        <FormError text={state.fieldErrors?.text} />
         <FormError text={state.message} />
         <form action={updateAction} className="">
             <textarea className="inline-block size-full" name="text" placeholder="Add a note" defaultValue={state.text} />
@@ -38,7 +39,7 @@ function NoteEditor({ text, id, setEditing }: {
 function NoteViewer({ text, timestamp }: { text: string, timestamp: Date }) {
     return (<>
         <p>{text}</p><br></br>
-        <span className="text-sm float-left">{timestamp.toLocaleString()}</span>
+        <span className="text-sm float-left">{dateTimeFormat.format(timestamp)}</span>
     </>)
 }
 
@@ -50,15 +51,14 @@ export interface NoteProps {
 
 export default function Note(props: NoteProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const deleteSelf = handleDelete.bind(null, props.id);
-    const {mutate} = useSWRConfig();
+    const { mutate } = useSWRConfig();
 
     const [state, deleteAction, pending] = useActionState(async prev => {
         let res = await handleDelete(props.id, prev);
         mutate(
             key => typeof key === "string" && key.startsWith("/api/notes"),
             undefined,
-            {revalidate: true}
+            { revalidate: true }
         );
         return res;
     }, { success: false });
@@ -72,10 +72,11 @@ export default function Note(props: NoteProps) {
                         <NoteViewer {...props} />}
                 </div>
                 <div>
-                    <button className="bg-red-700 text-white p-2 rounded-lg block"
-                        onClick={deleteAction}>
-                        Delete
-                    </button>
+                    <form action={deleteAction}>
+                        <button type="submit" className="bg-red-700 text-white p-2 rounded-lg block">
+                            Delete
+                        </button>
+                    </form>
                     <button className="bg-blue-700 text-white p-2 rounded-lg block" onClick={() => setIsEditing(!isEditing)}>
                         {isEditing ? "Cancel" : "Edit"}
                     </button>

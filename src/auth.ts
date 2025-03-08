@@ -61,14 +61,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
             return token;
         },
-        session({ session, user }) {
-            console.log(session);
-            console.log(user);
-            try {
-                session.user.id = user?.id;
-            } catch (e) {
-                console.log(session);
-                console.log(e);
+        session({ session, token }) {
+            if (token?.sub) {
+                session.user.id = token?.sub;
             }
             return session;
         }

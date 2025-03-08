@@ -3,7 +3,7 @@ import SubmitButton from "../ui/form/SubmitButton";
 import TextInput from "../ui/form/TextInput";
 import { smallLinkStyles } from "../ui/SmallLink";
 import Link from "next/link";
-import { signIn, SignInResponse } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useActionState } from "react";
 import FormError from "../ui/form/FormError";
 

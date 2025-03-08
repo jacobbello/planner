@@ -36,7 +36,6 @@ export async function getNoteById(id: number) {
 }
 
 export async function createNote(userId: string, text: string) {
-    console.log('Saving note:', text);
     return db
         .insert(notes)
         .values({ userId, text });

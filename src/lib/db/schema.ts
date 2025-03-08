@@ -8,7 +8,7 @@ export const users = pgTable("users", {
     password: varchar({length: 64}).notNull()
 });
 
-const userId = text("id").notNull().references(() => users.id, {onDelete: "cascade"});
+const userId = text("user_id").notNull().references(() => users.id, {onDelete: "cascade"});
 
 export const notes = pgTable("notes", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),

@@ -1,7 +1,5 @@
-import NoteViewer from "@/components/notes/NoteViewer";
+import NoteList from "@/components/notes/NoteList";
 
 export default function NotesPage() {
-    return <>
-        <NoteViewer />
-    </>
+    return <NoteList />;
 }

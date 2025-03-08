@@ -4,6 +4,16 @@ export const dateFormat = new Intl.DateTimeFormat("en-US", {
     day: "numeric"
 });
 
+export const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+});
+
+
 export function getDayAsRange(day = new Date()) {
     const start = new Date(day);
     start.setUTCHours(0, 0, 0, 0);

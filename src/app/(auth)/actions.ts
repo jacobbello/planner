@@ -5,6 +5,7 @@ import { loginUserSchema, signupUserSchema } from "@/lib/schemas/user";
 import { zfd } from "zod-form-data"
 
 
+/*
 const loginSchema = zfd.formData(loginUserSchema)
 export async function handleLogin(data: FormData) {
     const res = await loginSchema.safeParseAsync(data);
@@ -23,7 +24,7 @@ export async function handleLogin(data: FormData) {
             errors: [e]
         }
     }
-}
+}*/
 
 type SignupState = {
     errors?: {
@@ -41,7 +42,6 @@ export async function handleSignup(prevState: SignupState, data: FormData) {
         passwordMatch: data.get("passwordMatch") as string
     });
 
-    console.log("Success: " + res.success + " errors: " + JSON.stringify(res.error?.flatten().fieldErrors));
     if (!res.success) {
         return {
             errors: res.error.flatten().fieldErrors
@@ -49,7 +49,12 @@ export async function handleSignup(prevState: SignupState, data: FormData) {
     }
     try {
         await createUser(res.data.email, res.data.password);
-        await signIn("credentials", data);
+        await signIn("credentials", {
+            email: res.data.email,
+            password: res.data.password,
+            redirectTo: "/dashboard",
+            redirect: true
+        });
         return {}
     } catch (e: any) {
         return { errors: { server: e.message as string } }

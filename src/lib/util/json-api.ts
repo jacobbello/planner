@@ -14,3 +14,19 @@ export default function protectedRouteHandler(
         }, { status: 401 });
     });
 }
+
+export function protectedServerAction<S, T>(
+    action: (prev: S, data: T, userId: string) => Promise<S>
+) {
+    return async (prev: S, data: T) => {
+        const session = await auth();
+        if (!session?.user?.id) {
+            return {
+                ...prev,
+                success: false,
+                message: "Not authenticated"
+            };
+        }
+        return action(prev, data, session.user.id);
+    }
+}

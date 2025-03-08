@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/ui/navbar/Navbar";
-import NavbarDropdown from "@/components/ui/navbar/NavbarDropdown";
-import Link from "next/link";
-import NavbarLink, { NavbarLinks, verticalNavbarLinkStyles } from "@/components/ui/navbar/NavbarLink";
+import { NavbarLinks } from "@/components/ui/navbar/NavbarLink";
 import UserDropdown from "@/components/ui/UserDropdown";
+import Navbar from "@/components/ui/navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "Planner",

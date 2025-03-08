@@ -1,10 +1,9 @@
 'use client'
 import { useState } from "react"
 import Note from "./Note"
-import { handleCreateNote } from "@/app/(notes)/actions";
 import PageSelector from "../ui/PageSelector";
 import useSWR, { useSWRConfig } from "swr";
-import NoteCreate from "./NoteCreate";
+import CreateNoteForm from "./CreateNoteForm";
 
 const fetcher = (url: string | URL | Request, init: RequestInit | undefined) =>
     fetch(url, init).then(res => res.json());
@@ -37,9 +36,9 @@ function NoteListPage({ page, perPage }: PageInfo) {
         } else if (data !== undefined) {
             console.log(data);
             content = <ul>
-                {data?.todos?.map((note: { id: number, text: string, lastModified: Date }) => (
+                {data?.notes?.map((note: { id: number, text: string, lastModified: Date }) => (
                     <li key={note.id} className="mb-4">
-                        <Note text={note.text} timestamp={note.lastModified} id={note.id} />
+                        <Note text={note.text} timestamp={new Date(note.lastModified)} id={note.id} />
                     </li>
                 ))}
             </ul>
@@ -64,14 +63,7 @@ export default function NoteList() {
     const { mutate } = useSWRConfig();
     return (
         <>
-            <NoteCreate action={async (d) => {
-                await handleCreateNote(d);
-                mutate(
-                    (key) => typeof key === 'string' && key.startsWith('/api/notes?page='),
-                    (undefined),
-                    { revalidate: true }
-                );
-            }} />
+            <CreateNoteForm />
             <div className="flex justify-between mx-2 my-1">
                 <div>
                     <span>Showing {start} to {end} of {notesCount} notes </span>
