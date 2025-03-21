@@ -3,7 +3,7 @@ import { z } from "zod";
 export const createEventSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
-    date: z.string().datetime()
+    date: z.coerce.date()
 });
 
 export const updateEventSchema = z.object({

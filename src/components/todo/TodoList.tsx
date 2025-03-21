@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import TodoListItem from "./Todo";
+import Todo from "./Todo";
 import useSWR from "swr";
 import PageSelector from "../ui/PageSelector";
 
@@ -19,7 +19,7 @@ function TodoListPage({ page, perPage }: { page: number, perPage: number }) {
     return <ul>
         {data?.todo?.map((todo: any) => (
             <li key={todo.id}>
-                <TodoListItem {...{ ...todo, deadline: new Date(todo.deadline) }} />
+                <Todo {...{ ...todo, deadline: new Date(todo.deadline) }} />
             </li>
         ))}
     </ul>

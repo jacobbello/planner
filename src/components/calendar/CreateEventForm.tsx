@@ -10,9 +10,8 @@ export default function CreateEventForm({ date, onSuccess }: { date: Date , onSu
         onSuccess();
         return res;
     }, {} as CreateEventActionState)
-    const [includeEnd, setIncludeEnd] = useState(false);
 
-    const defaultDateValue = date.toISOString().split('T')[0]
+    const defaultDateValue = date.toISOString().slice(0, 16);//.split('T')[0]
     return <form action={formAction}>
         <FormError text={state?.message}/>
         <label>

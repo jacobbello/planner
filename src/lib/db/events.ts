@@ -14,7 +14,7 @@ export async function getEvents(userId: string) {
 }
 
 export async function getEventsInRange(
-    userId: number,
+    userId: string,
     range: { start?: Date, end?: Date },
     offset = 0,
     limit = 5
@@ -37,7 +37,7 @@ export async function getEventsInRange(
         .where(and(...conditions));
 }
 
-export async function getCountInRange(userId: number, range: { start: Date, end: Date }) {
+export async function getCountInRange(userId: string, range: { start: Date, end: Date }) {
     return db.select({ count: count() })
         .from(events)
         .where(and(
@@ -47,31 +47,21 @@ export async function getCountInRange(userId: number, range: { start: Date, end:
         .then(([{ count }]) => count);
 }
 
-export async function getEventsByDate(userId: number, date: Date) {
-    return db
-        .select()
-        .from(events)
-        .where(and(
-            eq(events.userId, userId),
-            eq(events.date, date)
-        ));
-}
-
-export async function createEvent(userId: number, name: string, description: string, date: Date) {
+export async function createEvent(userId: string, name: string, description: string, date: Date) {
     return db
         .insert(events)
         .values({ userId, name, description, date });
 }
 
 export async function updateEvent(
-    id: number, name: string, description: string, date: Date, userId?: number
+    id: number, name: string, description: string, date: Date, userId?: string
 ) {
     return db.update(events)
         .set({ name, description, date })
         .where(and(eq(events.id, id), userId ? eq(events.userId, userId) : undefined));
 }
 
-export async function deleteEvent(id: number, userId?: number) {
+export async function deleteEvent(id: number, userId?: string) {
     return db
         .delete(events)
         .where(and(eq(events.id, id), userId ? eq(events.userId, userId) : undefined));

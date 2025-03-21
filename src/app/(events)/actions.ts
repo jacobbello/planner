@@ -19,9 +19,8 @@ export type CreateEventActionState = {
 }
 export async function handleCreateEvent(prev: CreateEventActionState, data: FormData): Promise<CreateEventActionState> {
     const session = await auth();
-    console.log(JSON.stringify(session));
     if (!session?.user?.id) return { ...prev, success: false, message: "Not logged in" };
-    const userId = parseInt(session.user.id);
+    const userId = session.user.id;
     const res = createSchema.safeParse(data);
 
     if (!res.success) {
