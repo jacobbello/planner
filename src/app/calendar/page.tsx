@@ -8,8 +8,9 @@ import { getDayAsRange } from "@/lib/util/dateutils";
 import { useState } from "react";
 
 export default function Page() {
-    const [range, setRange] = useState(getDayAsRange());
-    const [creating, setCreating] = useState(true);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [creating, setCreating] = useState(false); // Corrected initial state to false
+    const range = getDayAsRange(selectedDate);
 
     return (
         <div>
@@ -18,15 +19,14 @@ export default function Page() {
                 {
                     creating ?
                         <Modal close={() => setCreating(false)} >
-                            <CreateEventForm date={range.start} onSuccess={() => 0} />
+                            <CreateEventForm date={selectedDate} onSuccess={() => 0} />
                         </Modal> : null
                 }
-                <Calendar start={range.start} end={range.end} onClick={
-                    d => setRange(getDayAsRange(d))} />
+                <Calendar selectedDate={selectedDate} onSelectDay={setSelectedDate} />
                 <div>
                     <Button onClick={() => setCreating(true)}>Create Event</Button>
                     <h2>Events</h2>
-                    <EventList {...range} />
+                    <EventList start={range.start} end={range.end} />
                 </div>
             </div>
         </div>
