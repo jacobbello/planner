@@ -13,7 +13,7 @@ export default function Page() {
         selected: new Date()
     });
     const [creating, setCreating] = useState(false); // Corrected initial state to false
-    const range = getDayAsRange(selectedDate.start);
+    const range = getDayAsRange(selectedDate.selected);
 
     return (
         <div>
@@ -32,7 +32,6 @@ export default function Page() {
                 }} />
                 <div>
                     <Button onClick={() => setCreating(true)}>Create Event</Button>
-                    <h2>Events</h2>
                     <EventList start={range.start} end={range.end} />
                 </div>
             </div>

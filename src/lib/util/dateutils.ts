@@ -21,7 +21,7 @@ export const isSameDay = (d1: Date, d2: Date) =>
 export function getDayAsRange(day = new Date()) {
     const start = new Date(day);
     start.setUTCHours(0, 0, 0, 0);
-    const end = new Date();
+    const end = new Date(day);
     end.setUTCHours(23, 59, 59, 999);
     return { start, end };
 }

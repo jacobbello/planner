@@ -4,8 +4,8 @@ import protectedRouteHandler from "@/lib/util/json-api";
 import { z } from "zod";
 
 const getEventsSchema = z.object({
-    page: z.number().int().positive().optional(),
-    perPage: z.number().int().positive().optional(),
+    page: z.coerce.number().int().positive().optional(),
+    perPage: z.coerce.number().int().positive().optional(),
     start: z.string().datetime().optional(),
     end: z.string().datetime().optional()
 })
