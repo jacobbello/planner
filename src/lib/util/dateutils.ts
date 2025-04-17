@@ -13,6 +13,10 @@ export const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
     hour12: true,
 });
 
+export const isSameDay = (d1: Date, d2: Date) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
 
 export function getDayAsRange(day = new Date()) {
     const start = new Date(day);
