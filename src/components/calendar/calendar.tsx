@@ -7,15 +7,15 @@ export function CalendarDay({ day, selectDay, selected = false }: { day: Date, s
     </button>);
 }
 
-export default function Calendar({ selectedDate, onSelectDay = (d: Date) => { } }:
-    { selectedDate: Date, onSelectDay?: (d: Date) => void }) {
+export default function Calendar({ selectedDate, startDate, onSelectDay = (d: Date) => { } }:
+    { selectedDate: Date, startDate: Date, onSelectDay?: (d: Date) => void }) {
     const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     let days = []
 
     for (let i = 0; i < 28; i++) {
-        let day = new Date(selectedDate);
+        let day = new Date(startDate);
         day.setUTCHours(0, 0, 0, 0);
-        day.setDate(selectedDate.getDate() + i - selectedDate.getDay());
+        day.setDate(startDate.getDate() + i - startDate.getDay());
         days.push(day);
     }
 

@@ -4,8 +4,8 @@ import protectedRouteHandler from "@/lib/util/json-api";
 import { z } from "zod";
 
 const getEventsSchema = z.object({
-    page: z.number().int().positive(),
-    perPage: z.number().int().positive(),
+    page: z.number().int().positive().optional(),
+    perPage: z.number().int().positive().optional(),
     start: z.string().datetime().optional(),
     end: z.string().datetime().optional()
 })
@@ -32,15 +32,17 @@ export const GET = protectedRouteHandler(async (userId, request) => {
 
     let start = new Date(res.data.start||0);
     let end = new Date(res.data.end || (Date.now() * 2));
+    if (res.data.page && res.data.perPage) {
+        events = await getEventsInRange(
+            userId, { start, end },
+            (res.data.page - 1) * res.data.perPage + 1,
+            res.data.perPage
+        );
+    }
+    
+    let count = await getCountInRange(userId, { start, end });
 
-    events = await getEventsInRange(
-        userId, { start, end },
-        (res.data.page - 1) * res.data.perPage + 1,
-        res.data.perPage
-    );
-    let total = await getCountInRange(userId, { start, end });
-
-    return Response.json({ events, total });
+    return Response.json({ events, count });
 })
 
 
@@ -48,24 +50,6 @@ const countEventsSchema = z.object({
     start: z.date().optional(),
     end: z.date().optional()
 });
-
-export const HEAD = protectedRouteHandler(async (userId, request) => {
-    const params = request.nextUrl.searchParams;
-
-    const res = await countEventsSchema.safeParseAsync({
-        page: params.get("page"),
-        perPage: params.get("perPage")
-    });
-
-    if (!res.success) {
-        return Response.json(res.error.flatten().fieldErrors, {status: 400});
-    }
-
-    let start = res.data.start || new Date(0);
-    let end = res.data.end || new Date(Date.now() * 2);
-    return Response.json(await getCountInRange(userId, { start, end }));
-});
-
 
 const createEventsSchema = z.object({
     name: z.string().nonempty(),

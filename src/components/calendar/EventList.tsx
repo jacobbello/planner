@@ -13,7 +13,6 @@ const fetcher = (url: string | URL | Request, init: RequestInit | undefined) =>
 export default function EventList(range: { start: Date, end: Date }) {
     const [page, setPage] = useState(1);
 
-
     const start = range.start !== undefined ? `&start=${range.start.toJSON()}` : '';
     const end = range.end !== undefined ? `&end=${range.end.toJSON()}` : '';
     const key = `/api/events?page=${page}&perPage=5` + start + end;
@@ -27,13 +26,11 @@ export default function EventList(range: { start: Date, end: Date }) {
     if (error) {
         content = <p>Error: {error.message}</p>
     } else if (!isLoading) {
-
         let events = data.events || [];
-        const totalEvents = data.total || 0;
-        console.log(data);
-        content = <div>
+        const totalEvents = data.count || 0;
+        content = totalEvents > 0 ? <div>
             <div className="grid grid-cols-2 gap-2">
-                <span>{(page - 1) * 5 + 1} to {Math.min(totalEvents, page * 5 + 1)} of {totalEvents}</span>
+                <span>{Math.min(page - 1) * 5 + 1} to {Math.min(totalEvents, page * 5 + 1)} of {totalEvents}</span>
                 <PageSelector setPage={setPage} page={page} max={Math.ceil(totalEvents / 5)} />
             </div>
             <ul>
@@ -46,7 +43,7 @@ export default function EventList(range: { start: Date, end: Date }) {
                     </li>
                 ))}
             </ul>
-        </div>
+        </div> : <p>No events scheduled</p>
     }
 
 
