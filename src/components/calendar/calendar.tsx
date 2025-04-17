@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useState } from "react";
+import { isSameDay } from "@/lib/util/dateutils";
 
 export function CalendarDay({ day, selectDay, selected = false }: { day: Date, selectDay: (date: Date) => void, selected: boolean }) {
     return (<button onClick={() => selectDay(day)} className={"aspect-square hover:bg-gray-300 " + (selected ? "bg-gray-300" : "bg-gray-100")}>
@@ -18,11 +18,6 @@ export default function Calendar({ selectedDate, onSelectDay = (d: Date) => { } 
         day.setDate(selectedDate.getDate() + i - selectedDate.getDay());
         days.push(day);
     }
-
-    const isSameDay = (d1: Date, d2: Date) =>
-        d1.getFullYear() === d2.getFullYear() &&
-        d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate();
 
     return <div>
         

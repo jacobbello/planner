@@ -6,27 +6,33 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useActionState } from "react";
 import FormError from "../ui/form/FormError";
+import { useRouter } from "next/navigation";
 
-export default function LoginForm() {
+const linkProps = {
+    children: "Don't have an account? Sign up",
+    href: "/signup",
+    className: smallLinkStyles,
+}
 
-    const linkProps = {
-        children: "Don't have an account? Sign up",
-        href: "/signup",
-        className: smallLinkStyles,
-    }
+interface CredentialsActionState {
+    success?: boolean,
+    error?: string
+}
 
-    interface CredentialsActionState {
-        success?: boolean,
-        error?: string
-    }
+export default function LoginForm() {   
+    const router = useRouter();
+    //const page = router.
     const credentialsAction = async (prev: CredentialsActionState, formData: FormData) => {
         try {
             const res = await signIn("credentials", {
                 email: formData.get("email"),
                 password: formData.get("password"),
-                redirect: false
+                redirect: false,
             });
-            return { success: res?.ok || false, error: res?.error };
+            if (res?.ok) {
+                router.back();
+            }
+            return { success: res?.ok || false, error: res?.code || res?.error };
         } catch (e: any) {
             console.log("Error signing in: " + e);
             return { success: false, error: e.message } as CredentialsActionState

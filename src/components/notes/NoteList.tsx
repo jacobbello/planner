@@ -49,7 +49,7 @@ function NoteListPage({ page, perPage }: PageInfo) {
 
 export default function NoteList() {
     const { data } = useSWR("/api/notes", (url) =>
-        fetch(url, { method: "HEAD" }
+        fetch(url, { method: "GET" }
     ).then(res => res.json()));
 
     const [page, setPage] = useState({ page: 1, perPage: 10 });
@@ -59,8 +59,6 @@ export default function NoteList() {
     const end = Math.min((page.page * page.perPage) + 1, notesCount);
 
     const maxPage = Math.ceil(notesCount / page.perPage);
-
-    const { mutate } = useSWRConfig();
     return (
         <>
             <CreateNoteForm />

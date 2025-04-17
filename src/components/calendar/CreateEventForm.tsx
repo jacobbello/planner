@@ -3,6 +3,7 @@ import { useActionState, useState } from "react"
 import TextInput from "../ui/form/TextInput"
 import SubmitButton from "../ui/form/SubmitButton"
 import FormError from "../ui/form/FormError"
+import { toLocalDateTime } from "@/lib/util/dateutils"
 
 export default function CreateEventForm({ date, onSuccess }: { date: Date , onSuccess: () => void }) {
     const [state, formAction, pending] = useActionState(async (prev: any, data: FormData) => {
@@ -11,7 +12,7 @@ export default function CreateEventForm({ date, onSuccess }: { date: Date , onSu
         return res;
     }, {} as CreateEventActionState)
 
-    const defaultDateValue = date.toISOString().slice(0, 16);//.split('T')[0]
+    const defaultDateValue = toLocalDateTime(date);
     return <form action={formAction}>
         <FormError text={state?.message}/>
         <label>
